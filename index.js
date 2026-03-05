@@ -1,8 +1,13 @@
+import readlinkSync from "readline-sync";
 import fs from "fs/promises";
+
+
+const text = readlinkSync.question("Skriv en sak som ska sparas: ");
+
 
 async function main(){
     try{
-        await fs.writeFile("data.txt", "Hello, World!");
+        await fs.writeFile("data.txt", text);
         console.log("File written successfully");
 
 
