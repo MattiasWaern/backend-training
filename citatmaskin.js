@@ -1,3 +1,4 @@
+// citatmaskin.js
 let citat = [
   { text: 'Det löser sig. Om inte, är det inte slutet.', kategori: 'pepp' },
   { text: 'Koden fungerar inte? Har du provat att stänga och öppna datorn?', kategori: 'rolig' },
@@ -6,6 +7,7 @@ let citat = [
   { text: 'Why do programmers prefer dark mode? Because light attracts bugs.', kategori: 'rolig' }
 ];
 
+// Funktion för att slumpa ett element från en array
 const slumpa = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const sendJSON = (res, status, data) => {
@@ -13,10 +15,12 @@ const sendJSON = (res, status, data) => {
   res.end(JSON.stringify(data));
 };
 
+// Exportera handleRequest för att användas i server-api.js
 export const handleRequest = (req, res, url) => {
   const path = url.pathname;
   const method = req.method;
 
+  // Roten - välkomstmeddelande och tillgängliga rutter
   if (path === '/' && method === 'GET') {
     return sendJSON(res, 200, {
       meddelande: 'Välkommen till Citatmaskinen!',
@@ -29,13 +33,16 @@ export const handleRequest = (req, res, url) => {
     });
   }
 
+  // Hämta alla citat
   if (path === '/api/citat/alla' && method === 'GET') {
     return sendJSON(res, 200, citat);
   }
 
+  // Hämta slumpat citat, eventuellt filtrerat på kategori
   if (path === '/api/citat' && method === 'GET') {
     const kategori = url.searchParams.get('kategori');
 
+    // Om kategori finns, filtrera citaten
     if (kategori) {
       const filtrerade = citat.filter(c => c.kategori === kategori);
       if (filtrerade.length === 0) {
@@ -43,10 +50,12 @@ export const handleRequest = (req, res, url) => {
       }
       return sendJSON(res, 200, slumpa(filtrerade));
     }
-
+    
+    // Annars, returnera ett slumpat citat från alla
     return sendJSON(res, 200, slumpa(citat));
   }
 
+  // Lägg till nytt citat
   if (path === '/api/citat' && method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
@@ -65,5 +74,6 @@ export const handleRequest = (req, res, url) => {
     return;
   }
 
+  // Om ingen rutt matchar
   sendJSON(res, 404, { error: 'Rutten hittades inte' });
 };
