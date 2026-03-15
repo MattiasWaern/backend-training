@@ -1,0 +1,34 @@
+import express from 'express';
+const app = express();
+const PORT = 3001;
+
+app.use(express.json());
+
+let citat = [
+  { text: 'Det löser sig. Om inte, är det inte slutet.', kategori: 'pepp' },
+  { text: 'Koden fungerar inte? Har du provat att stänga och öppna datorn?', kategori: 'rolig' },
+  { text: 'Idag är en bra dag att lära sig något nytt.', kategori: 'pepp' }
+];
+
+// Hanterar både /api/citat och /api/citat?kategori=pepp
+app.get('/api/citat', (req, res) => {
+    const kategori = req.query.kategori;
+    if (kategori) {
+        return res.status(200).json(citat.filter(c => c.kategori === kategori));
+    }
+    res.status(200).json(citat);
+});
+
+app.post('/api/addcitat', (req, res) => {
+    const { text, kategori } = req.body;
+    if (text && kategori) {
+        citat.push({ text, kategori });
+        res.status(201).json({ message: 'Citat tillagt' });
+    } else {
+        res.status(400).json({ error: 'Text och kategori krävs' });
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Citatmaskin API lyssnar på http://localhost:${PORT}`);
+});
