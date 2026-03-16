@@ -46,6 +46,8 @@ app.post('/users', (req, res) => {
    }
 })
 
+//DELETE user by id
+
 app.listen(PORT, () => {
    console.log(`Server is running on http://localhost:${PORT}`);
 })
