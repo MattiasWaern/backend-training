@@ -31,7 +31,7 @@ app.get('/users/:id', (req, res) => {
 
 //POST create new user
 app.post('/users', (req, res) => {
-   const {name, eemail} = req.body;
+   const {name, email} = req.body;
    if(name && email){
       const newUser = {
          id: users.length + 1,
