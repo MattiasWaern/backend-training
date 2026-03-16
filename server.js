@@ -21,13 +21,14 @@ app.get('/users', (req, res) => {
 //GET user by id
 app.get('/users/:id', (req, res) => {
    const userId = parseInt(req.params.id);
-   const user = users.find(u => u.d === userId);
+   const user = users.find(u => u.id === userId);
+
    if(user){
       res.json(user);
    } else {
       res.status(404).json({error: 'User not found'});
    }
-})
+});
 
 //POST create new user
 app.post('/users', (req, res) => {
